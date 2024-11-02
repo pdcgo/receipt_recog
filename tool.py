@@ -39,10 +39,25 @@ def extract_tracking_info(streamdata):
 
 def extract_long_integers(streamdata):
     long_integers = []
-    with fitz.open(stream=streamdata, filetype="pdf")  as pdf:
+    with fitz.open(stream=streamdata, filetype="pdf") as pdf:
         for page_num in range(pdf.page_count):
             page = pdf.load_page(page_num)
             text = page.get_text()
-            matches = re.findall(r"\b\d{15,}\b(?=\n)", text)
-            long_integers.extend(matches)
-    return list(set(long_integers))
+            # print(text)
+            if re.search(r"\bOrder\s*ID:\s*([^\n]+)", text):
+                order_id = re.search(r"\bOrder\s*ID:\s*([^\n]+)", text)
+                matches = re.sub(r".*?:\s*", "", order_id.group()).split()
+                
+            else:                
+                matches = re.findall(r"\b\d{14,}\b(?=\n)", text)
+                long_integers.extend(matches)
+                matches = list(set(long_integers))
+            #print(matches)
+            
+    return matches
+
+# print (extract_long_integers('uploaded_trisnatiktok.pdf'))
+# print (type(extract_long_integers('uploaded_trisnatiktok.pdf')))
+
+# print (extract_long_integers('uploaded_isnatiktok.pdf'))
+# print (type(extract_long_integers('uploaded_isnatiktok.pdf')))
