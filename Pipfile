@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pymupdf = "*"
+pillow = "==9.0.1"
+frontend = "*"
+fastapi = {extras = ["standard"] }
+python-multipart = "*"
+requests = "*"
+uvicorn = "*"
+gunicorn = "*"
+pyzbar = {extras = ["scripts"], version = "*"}
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
