@@ -15,6 +15,7 @@ gunicorn = "*"
 pyzbar = {extras = ["scripts"], version = "*"}
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"
