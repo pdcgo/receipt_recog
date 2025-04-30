@@ -29,6 +29,11 @@ def extract_tracking_info(streamdata):
             resi_match = re.search(r"\bNo\.\s*Resi:\s*([^\n]+)", text)
             if resi_match:
                 tracking_info['no_resi'] = resi_match.group(1).strip()
+            else:
+                resi_match = re.search(r"\s*Resi:\s*([^\n]+)", text)
+                if resi_match:
+                    tracking_info['no_resi'] = resi_match.group(1).strip()
+
             order_match = re.search(r"\bNo\.\s*Pesanan:\s*([^\n]+)", text) or re.search(r"\bINV\s*([^\n]+)", text)
             #print(order_match.group())
             if order_match:
