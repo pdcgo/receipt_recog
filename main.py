@@ -38,14 +38,24 @@ async def readpdf(req: Request):
     # mulai processing
     try:
         codes = extract_codes_from_pdf(data)
+
         tracking_info = extract_tracking_info(data)
         long_integers = extract_long_integers(data)
-        resi_tenan = tracking_info.get('no_resi') or codes[-1].get('data')
-        no_pesanan_tenan = long_integers[0] if len(long_integers) > 0 else tracking_info.get('no_pesanan') or codes[0].get('data')
+        
+        real_receipt = tracking_info.get('no_resi')
+        if real_receipt is None:
+            real_receipt = codes[-1].get('data')
+
+        real_order_id = tracking_info.get('no_pesanan')
+        if real_order_id is None:
+            if len(long_integers) > 0:
+                real_order_id = long_integers[0]
+            else:
+                real_order_id = codes[0].get('data')
         
         res.status = "success"
-        res.order_id = no_pesanan_tenan
-        res.receipt = resi_tenan
+        res.order_id = real_order_id
+        res.receipt = real_receipt
         
     except Exception as e:
         res.status = "error"
