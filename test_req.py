@@ -89,6 +89,13 @@ def test_pdf_reader_spx_std():
     assert response.json()["order_id"] == "250707F5G3EYVP"
     assert response.json()["receipt"] == "SPXID052494793227"
 
+def test_pdf_reader_overflow():
+    filepath = "test/assets/overflow.pdf"
+    response = upload_file(filepath)
+    assert response.status_code == 200
+    assert response.json()["order_id"] == "2611028J0J4BRG"
+    assert response.json()["receipt"] == "SPXID06340493477B"
+
 def test_pdf_reader_toped():
     filepath = "test/assets/uploaded_toped.pdf"
     response = upload_file(filepath)
@@ -131,6 +138,7 @@ def test_pdf_reader():
         # "test/new_receipt/get (2).pdf",
         # "test/new_receipt/get (3).pdf",
         # "test/new_receipt/get (4).pdf",
+        "test/assets/overflow.pdf",
     ]
 
     for fname in fnames:

@@ -20,6 +20,12 @@ def extract_codes_from_pdf(streamdata, dpi=300):
                 })
     return list({frozenset(item.items()): item for item in codes}.values())
 
+def complete_resi(resi, text):
+    if len(resi) < 8:
+        return resi
+    candidates = re.findall(re.escape(resi) + r"[A-Za-z0-9-]*", text)
+    return max(candidates, key=len, default=resi)
+
 def extract_tracking_info(streamdata):
     tracking_info = {}
     with fitz.open(stream=streamdata, filetype="pdf") as pdf:
@@ -28,11 +34,11 @@ def extract_tracking_info(streamdata):
             text = page.get_text()
             resi_match = re.search(r"\bNo\.\s*Resi:\s*([^\n]+)", text)
             if resi_match:
-                tracking_info['no_resi'] = resi_match.group(1).strip()
+                tracking_info['no_resi'] = complete_resi(resi_match.group(1).strip(), text)
             else:
                 resi_match = re.search(r"\s*Resi:\s*([^\n]+)", text)
                 if resi_match:
-                    tracking_info['no_resi'] = resi_match.group(1).strip()
+                    tracking_info['no_resi'] = complete_resi(resi_match.group(1).strip(), text)
 
             order_match = re.search(r"\bNo\.\s*Pesanan:\s*([^\n]+)", text) or re.search(r"\bINV\s*([^\n]+)", text)
             #print(order_match.group())
